@@ -63,19 +63,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="Portfolio Analysis_files/libs/clipboard/clipboard.min.js"></script>
-<script src="Portfolio Analysis_files/libs/quarto-html/quarto.js" type="module"></script>
-<script src="Portfolio Analysis_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="Portfolio Analysis_files/libs/quarto-html/popper.min.js"></script>
-<script src="Portfolio Analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="Portfolio Analysis_files/libs/quarto-html/anchor.min.js"></script>
-<link href="Portfolio Analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="Portfolio Analysis_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="Portfolio Analysis_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="Portfolio Analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="Portfolio Analysis_files/libs/bootstrap/bootstrap-d4791fd432f8730d65180f3796899ee9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script src="Portfolio Analysis_files/libs/kePrint-0.0.1/kePrint.js"></script>
-<link href="Portfolio Analysis_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="Portfolio_Analysis_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Portfolio_Analysis_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Portfolio_Analysis_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Portfolio_Analysis_files/libs/quarto-html/popper.min.js"></script>
+<script src="Portfolio_Analysis_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Portfolio_Analysis_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Portfolio_Analysis_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Portfolio_Analysis_files/libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Portfolio_Analysis_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Portfolio_Analysis_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Portfolio_Analysis_files/libs/bootstrap/bootstrap-d4791fd432f8730d65180f3796899ee9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="Portfolio_Analysis_files/libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="Portfolio_Analysis_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -134,9 +134,11 @@ window.Quarto = {
   <li><a href="#historical-backtesting" id="toc-historical-backtesting" class="nav-link" data-scroll-target="#historical-backtesting"><span class="header-section-number">6.1</span> Historical Backtesting</a></li>
   <li><a href="#excess-kurtosis" id="toc-excess-kurtosis" class="nav-link" data-scroll-target="#excess-kurtosis"><span class="header-section-number">6.2</span> Excess Kurtosis</a></li>
   <li><a href="#implications" id="toc-implications" class="nav-link" data-scroll-target="#implications"><span class="header-section-number">6.3</span> Implications</a></li>
+  <li><a href="#summary-of-results" id="toc-summary-of-results" class="nav-link" data-scroll-target="#summary-of-results"><span class="header-section-number">6.4</span> Summary of Results</a></li>
   </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">7</span> Conclusion</a></li>
   </ul>
-<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Portfolio-Analysis.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Portfolio_Analysis.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></nav>
 </div>
 <main class="content" id="quarto-document-content">
 
@@ -194,13 +196,20 @@ figcaption {
 </section>
 <section id="introduction" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="introduction"><span class="header-section-number">2</span> Introduction</h2>
+<p>A central tenet of portfolio risk management is that diversification reduces risk. By holding assets that do not move in perfect unison, an investor can reduce the volatility of a portfolio without necessarily sacrificing expected return. This principle is intuitive and widely taught, but it is less commonly demonstrated with a direct, quantified comparison. How much less risky, precisely, is a diversified portfolio than a concentrated one, and through what mechanism does that reduction occur?</p>
+<p>This report addresses that question empirically. Two equally weighted, eleven stock portfolios are constructed: one spanning six economically distinct sectors, and one concentrated entirely within large cap technology holdings. Using Monte Carlo simulation, the 10 day Value at Risk and Conditional Value at Risk of each portfolio are estimated and compared, with the underlying correlation structure examined as the mechanism driving any difference in risk. The resulting model is then validated against historical data through backtesting and an assessment of return distribution characteristics, to establish not only what the model predicts but how reliable that prediction is.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Packages Used</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyquant)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS, <span class="at">exclude =</span> <span class="st">"select"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(e1071)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
@@ -294,7 +303,7 @@ figcaption {
 <p>The figure below presents the resulting correlation structure as heatmaps, with holdings ordered identically within each panel to allow direct visual comparison.</p>
 <div class="cell">
 <details class="code-fold">
-<summary>Code</summary>
+<summary>Correlation Matrix</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>returns_wide_A <span class="ot">&lt;-</span> portfolio_A <span class="sc">|&gt;</span> </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(daily_return)) <span class="sc">|&gt;</span> </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(date, symbol, daily_return) <span class="sc">|&gt;</span> </span>
@@ -348,7 +357,7 @@ figcaption {
 </div>
 <div class="cell">
 <details class="code-fold">
-<summary>Code</summary>
+<summary>Heatmap</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_corr_heatmap</span>(cor_matrix_A, </span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Diversified Portfolio - Correlation"</span>)<span class="sc">+</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_corr_heatmap</span>(cor_matrix_B, <span class="st">"Concentrated Tech Portfolio - Correlation"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -357,7 +366,7 @@ figcaption {
 <div id="fig-heatmap" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-heatmap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Portfolio-Analysis_files/figure-html/fig-heatmap-1.png" class="img-fluid figure-img" width="1152">
+<img src="Portfolio_Analysis_files/figure-html/fig-heatmap-1.png" class="img-fluid figure-img" width="1152">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-heatmap-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1: Pairwise Return Correlation: Diversified vs.&nbsp;Concentrated Tech Portfolio
@@ -375,47 +384,46 @@ Figure&nbsp;1: Pairwise Return Correlation: Diversified vs.&nbsp;Concentrated Te
 <p>Having established that the concentrated technology portfolio carries meaningfully higher average correlation among its holdings, this section quantifies the resulting difference in portfolio level risk using the Monte Carlo simulation described in the Methodology section above.</p>
 <div class="cell">
 <details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS, <span class="at">exclude =</span> <span class="st">"select"</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>simulate_portfolio_var <span class="ot">&lt;-</span> <span class="cf">function</span>(returns_wide, <span class="at">n_sims =</span> <span class="dv">10000</span>,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                                   horizon_days, </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">confidence_levels =</span> <span class="fu">c</span>(<span class="fl">0.95</span>, <span class="fl">0.99</span>)){</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  returns_matrix <span class="ot">&lt;-</span> returns_wide <span class="sc">|&gt;</span> </span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>date) <span class="sc">|&gt;</span> </span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.matrix</span>()</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  n_assets <span class="ot">&lt;-</span> <span class="fu">ncol</span>(returns_matrix)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  weights <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">/</span>n_assets, n_assets)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(returns_matrix, <span class="at">na.rm =</span> T)</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  sigma <span class="ot">&lt;-</span> <span class="fu">cov</span>(returns_matrix, <span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span>)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  simulated_returns <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(<span class="at">n =</span> n_sims, <span class="at">mu =</span> mu, <span class="at">Sigma =</span> sigma)</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  simulated_portfolio_returns <span class="ot">&lt;-</span> simulated_returns <span class="sc">%*%</span> weights</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  simulated_portfolio_returns <span class="ot">&lt;-</span> simulated_portfolio_returns <span class="sc">*</span> <span class="fu">sqrt</span>(horizon_days)</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">lapply</span>(confidence_levels, <span class="cf">function</span>(cl){</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    var_threshold <span class="ot">&lt;-</span> <span class="fu">quantile</span>(simulated_portfolio_returns, <span class="at">probs =</span> <span class="dv">1</span><span class="sc">-</span>cl)</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    cvar <span class="ot">&lt;-</span> <span class="fu">mean</span>(</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>      simulated_portfolio_returns[simulated_portfolio_returns<span class="sc">&lt;=</span>var_threshold])</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span>(<span class="at">confidence =</span> cl, <span class="at">VaR =</span> <span class="sc">-</span>var_threshold, <span class="at">CVaR =</span> <span class="sc">-</span>cvar)</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">|&gt;</span> </span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_rows</span>()</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">simulated_returns =</span> simulated_portfolio_returns,</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">summary =</span> results</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>var_results_A <span class="ot">&lt;-</span> <span class="fu">simulate_portfolio_var</span>(returns_wide_A, </span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">horizon_days =</span> <span class="dv">10</span>)</span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>var_results_B <span class="ot">&lt;-</span> <span class="fu">simulate_portfolio_var</span>(returns_wide_B, </span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">horizon_days =</span> <span class="dv">10</span>)</span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>var_results_A<span class="sc">$</span>summary</span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>var_results_B<span class="sc">$</span>summary</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<summary>Monte Carlo Simulation</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>simulate_portfolio_var <span class="ot">&lt;-</span> <span class="cf">function</span>(returns_wide, <span class="at">n_sims =</span> <span class="dv">10000</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                                   horizon_days, </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">confidence_levels =</span> <span class="fu">c</span>(<span class="fl">0.95</span>, <span class="fl">0.99</span>)){</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  returns_matrix <span class="ot">&lt;-</span> returns_wide <span class="sc">|&gt;</span> </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>date) <span class="sc">|&gt;</span> </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">as.matrix</span>()</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  n_assets <span class="ot">&lt;-</span> <span class="fu">ncol</span>(returns_matrix)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  weights <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">/</span>n_assets, n_assets)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(returns_matrix, <span class="at">na.rm =</span> T)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  sigma <span class="ot">&lt;-</span> <span class="fu">cov</span>(returns_matrix, <span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  simulated_returns <span class="ot">&lt;-</span> <span class="fu">mvrnorm</span>(<span class="at">n =</span> n_sims, <span class="at">mu =</span> mu, <span class="at">Sigma =</span> sigma)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  simulated_portfolio_returns <span class="ot">&lt;-</span> simulated_returns <span class="sc">%*%</span> weights</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  simulated_portfolio_returns <span class="ot">&lt;-</span> simulated_portfolio_returns <span class="sc">*</span> <span class="fu">sqrt</span>(horizon_days)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> <span class="fu">lapply</span>(confidence_levels, <span class="cf">function</span>(cl){</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    var_threshold <span class="ot">&lt;-</span> <span class="fu">quantile</span>(simulated_portfolio_returns, <span class="at">probs =</span> <span class="dv">1</span><span class="sc">-</span>cl)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    cvar <span class="ot">&lt;-</span> <span class="fu">mean</span>(</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>      simulated_portfolio_returns[simulated_portfolio_returns<span class="sc">&lt;=</span>var_threshold])</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span>(<span class="at">confidence =</span> cl, <span class="at">VaR =</span> <span class="sc">-</span>var_threshold, <span class="at">CVaR =</span> <span class="sc">-</span>cvar)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">|&gt;</span> </span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_rows</span>()</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">simulated_returns =</span> simulated_portfolio_returns,</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">summary =</span> results</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>var_results_A <span class="ot">&lt;-</span> <span class="fu">simulate_portfolio_var</span>(returns_wide_A, </span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">horizon_days =</span> <span class="dv">10</span>)</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>var_results_B <span class="ot">&lt;-</span> <span class="fu">simulate_portfolio_var</span>(returns_wide_B, </span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">horizon_days =</span> <span class="dv">10</span>)</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>var_results_A<span class="sc">$</span>summary</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>var_results_B<span class="sc">$</span>summary</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 <p>At the 95% confidence level, the diversified portfolio’s simulated 10-day VaR was 4.4%, compared to 8.7% for the concentrated technology portfolio, which is roughly twice that of the diversified one. This ratio holds consistently at the 99% confidence level (6.3% vs.&nbsp;11.9%) and across both VaR and CVaR, with the concentrated portfolio’s risk measures running approximately 1.9–2.0 times those of the diversified portfolio at every level examined. The stability of this ratio across confidence levels indicates that the risk gap is driven primarily by the difference in correlation structure documented above, rather than by asymmetric tail behavior specific to one portfolio.</p>
 <p>The following figure shows the full simulated return distributions:</p>
 <div class="cell">
 <details class="code-fold">
-<summary>Code</summary>
+<summary>Density Function of the Return Distributions</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sim_df <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">portfolio =</span> <span class="st">"Diversified"</span>, <span class="at">return =</span> <span class="fu">as.numeric</span>(</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    var_results_A<span class="sc">$</span>simulated_returns)),</span>
@@ -450,7 +458,7 @@ Figure&nbsp;1: Pairwise Return Correlation: Diversified vs.&nbsp;Concentrated Te
 <div id="fig-density" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-density-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="Portfolio-Analysis_files/figure-html/fig-density-1.png" class="img-fluid figure-img" width="672">
+<img src="Portfolio_Analysis_files/figure-html/fig-density-1.png" class="img-fluid figure-img" width="672">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-density-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2: Simulated 10 day return distributions — concentrated tech portfolio shows a visibly wider loss tail than the diversified portfolio
@@ -464,13 +472,13 @@ Figure&nbsp;2: Simulated 10 day return distributions — concentrated tech portf
 </section>
 <section id="model-validation-1" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="model-validation-1"><span class="header-section-number">6</span> Model Validation</h2>
-<p>The Monte Carlo simulation above assumes that portfolio returns follow a multivariate normal distribution. This is a standard and analytically convenient simplification, but it is worth testing directly against the historical data rather than taken on faith. Two checks were performed: a historical backtest of the VaR thresholds against realized returns, and a direct measurement of excess kurtosis to assess the degree of fat-tailedness in each portfolio’s return distribution.</p>
+<p>The Monte Carlo simulation above assumes that portfolio returns follow a multivariate normal distribution. This is a standard and analytically convenient simplification, but it is worth testing directly against the historical data rather than trusting it blindly. Two checks were performed: a historical backtest of the VaR thresholds against realized returns, and a direct measurement of excess kurtosis to assess the degree of leptokurtosis in each portfolio’s return distribution.</p>
 <section id="historical-backtesting" class="level3" data-number="6.1">
 <h3 data-number="6.1" class="anchored" data-anchor-id="historical-backtesting"><span class="header-section-number">6.1</span> Historical Backtesting</h3>
-<p>Each portfolio’s 95% and 99% VaR estimates were compared against realized 10-day rolling returns over the full sample period. If a VaR model is well-calibrated, the proportion of historical windows in which realized losses exceeded the VaR threshold (the breach rate) should closely match the theoretical exceedance implied by the confidence level — approximately 5% at the 95% level and 1% at the 99% level.</p>
+<p>Each portfolio’s 95% and 99% VaR estimates were compared against realized 10 day rolling returns over the full sample period. If a VaR model is well calibrated, the proportion of historical windows in which realized losses exceeded the VaR threshold (the breach rate) should closely match the theoretical exceedances implied by the confidence level (approximately 5% at the 95% level and 1% at the 99% level).</p>
 <div class="cell">
 <details class="code-fold">
-<summary>Code</summary>
+<summary>Historical Backtesting</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>historical_portfolio_returns_A <span class="ot">&lt;-</span> returns_wide_A <span class="sc">|&gt;</span> </span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>date) <span class="sc">|&gt;</span> </span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>() <span class="sc">%*%</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">11</span>,<span class="dv">11</span>)</span>
@@ -518,73 +526,74 @@ Figure&nbsp;2: Simulated 10 day return distributions — concentrated tech portf
 <span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>breach_rate_99_B</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<p>The diversified portfolio’s backtest results were slightly conservative at the 95% level (3.5% observed vs.&nbsp;5% expected) but showed a higher-than-expected breach rate at 99% (1.65% vs.&nbsp;1%) — a directional shift indicating the model understates risk more severely in the extreme tail than in the moderate one. The concentrated technology portfolio, by contrast, backtested closer to its theoretical expectations at both confidence levels (5.16% vs.&nbsp;5%, and 1.2% vs.&nbsp;1%).</p>
+<p>The diversified portfolio’s backtest results were slightly conservative at the 95% level (3.5% observed vs.&nbsp;5% expected) but showed a higher than expected breach rate at 99% (1.63% vs.&nbsp;1%), this indicates that the model understates risk more severely in the extreme tail than in the moderate one. The concentrated technology portfolio, by contrast, backtested closer to its theoretical expectations at both confidence levels (5.16% vs.&nbsp;5%, and 1.13% vs.&nbsp;1%).</p>
 </section>
 <section id="excess-kurtosis" class="level3" data-number="6.2">
 <h3 data-number="6.2" class="anchored" data-anchor-id="excess-kurtosis"><span class="header-section-number">6.2</span> Excess Kurtosis</h3>
-<p>To investigate this pattern directly, excess kurtosis — the degree to which a distribution’s tails are heavier than the normal distribution’s (for which excess kurtosis equals zero) — was computed for each portfolio’s realized daily returns.</p>
-<p>The diversified portfolio’s returns exhibit an excess kurtosis of approximately 5.0, compared to 3.2 for the concentrated technology portfolio. Both values confirm pronounced leptokurtic, fat-tailed behavior in both portfolios — extreme moves occur more frequently than a normal distribution would predict — but the effect is notably stronger in the diversified portfolio. This is consistent with its larger deviation from expected breach rates in backtesting: a fatter-tailed return distribution means the model’s normal-distribution assumption is a weaker approximation, and this shows up directly as a bigger gap between observed and expected breach rates.</p>
-<p>One plausible explanation is that the concentrated portfolio’s higher inter-asset correlation causes individual tail events to move together and partially average out at the portfolio level, while the diversified portfolio’s more idiosyncratic, less-correlated tail events compound into a fatter portfolio-level tail. Confirming this mechanism, however, would require examining per-asset kurtosis and correlation dynamics during tail events specifically — an extension beyond the scope of this analysis.</p>
+<p>To investigate this pattern directly, excess kurtosis (the degree to which a distribution’s tails are heavier than the normal distribution’s) was computed for each portfolio’s realized daily returns.</p>
+<p>The diversified portfolio’s returns exhibit an excess kurtosis of approximately 5.0 (the excess kurtosis of a normal distribution is 0), compared to 3.2 for the concentrated technology portfolio. Both values confirm pronounced leptokurtic, fat-tailed behavior in both portfolios, meaning that extreme moves occur more frequently than a normal distribution would predict, but the effect is notably stronger in the diversified portfolio. This is consistent with its larger deviation from expected breach rates in backtesting. A fatter tailed return distribution means the model’s normal distribution assumption is a weaker approximation.</p>
+<p>One plausible explanation is that the concentrated portfolio’s higher inter asset correlation causes individual tail events to move together and partially average out at the portfolio level, while the diversified portfolio’s more idiosyncratic, less-correlated tail events compound into a fatter portfolio level tail. Confirming this mechanism, however, would require examining the kurtosis for each asset and correlation dynamics during tail events specifically, which is beyond the scope of this analysis.</p>
 <div class="cell">
 <details class="code-fold">
-<summary>Code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(e1071)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kurtosis</span>(historical_portfolio_returns_A)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kurtosis</span>(historical_portfolio_returns_B)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<summary>Kurtosis</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kurtosis</span>(historical_portfolio_returns_A)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kurtosis</span>(historical_portfolio_returns_B)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
 </section>
 <section id="implications" class="level3" data-number="6.3">
 <h3 data-number="6.3" class="anchored" data-anchor-id="implications"><span class="header-section-number">6.3</span> Implications</h3>
-<p>Taken together, these results indicate that the Monte Carlo simulation’s normal-distribution assumption provides a reasonable, if imperfect, approximation of portfolio risk for both portfolios — closer to well-calibrated at the 95% level, and modestly understating risk at the 99% level, particularly for the diversified portfolio. This is a well-documented limitation of parametric VaR methods in financial applications generally, and does not undermine the core comparative finding of this analysis: regardless of the precise calibration at any single confidence level, the concentrated technology portfolio’s risk measures consistently exceeded the diversified portfolio’s by a factor of roughly two, across every metric and confidence level examined.</p>
-<div class="cell">
+<p>Taken together, these results indicate that the Monte Carlo simulation’s normal distribution assumption provides a reasonable, if imperfect, approximation of portfolio risk for both portfolios closer to well calibrated at the 95% level, and modestly understating risk at the 99% level, particularly for the diversified portfolio. This is a well documented limitation of parametric VaR methods in financial applications generally, and does not undermine the core comparative finding of this analysis: the concentrated technology portfolio’s risk measures consistently exceeded the diversified portfolio’s by a factor of roughly two, across every metric and confidence level examined.</p>
+</section>
+<section id="summary-of-results" class="level3" data-number="6.4">
+<h3 data-number="6.4" class="anchored" data-anchor-id="summary-of-results"><span class="header-section-number">6.4</span> Summary of Results</h3>
+<p>The metrics discussed throughout this analysis are consolidated below, presenting each portfolio’s correlation structure, simulated risk, and model validation results side by side.</p>
+<div class="cell" data-tbl-pos="H">
 <details class="code-fold">
 <summary>Summary Table</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>summary_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Metric =</span> <span class="fu">c</span>(</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Average pairwise correlation"</span>,</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"VaR 95% (10-day)"</span>,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"VaR 99% (10-day)"</span>,</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"CVaR 95% (10-day)"</span>,</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"CVaR 99% (10-day)"</span>,</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Backtest breach rate (95%, expected 5%)"</span>,</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Backtest breach rate (99%, expected 1%)"</span>,</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Excess kurtosis"</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>   <span class="at">Diversified =</span> <span class="fu">c</span>(</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(<span class="fu">avg_cor</span>(cor_matrix_A), <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(var_results_A<span class="sc">$</span>summary<span class="sc">$</span>VaR[var_results_A<span class="sc">$</span>summary<span class="sc">$</span>confidence <span class="sc">==</span> <span class="fl">0.95</span>], <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(var_results_A<span class="sc">$</span>summary<span class="sc">$</span>VaR[var_results_A<span class="sc">$</span>summary<span class="sc">$</span>confidence <span class="sc">==</span> <span class="fl">0.99</span>], <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(var_results_A<span class="sc">$</span>summary<span class="sc">$</span>CVaR[var_results_A<span class="sc">$</span>summary<span class="sc">$</span>confidence <span class="sc">==</span> <span class="fl">0.95</span>], <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(var_results_A<span class="sc">$</span>summary<span class="sc">$</span>CVaR[var_results_A<span class="sc">$</span>summary<span class="sc">$</span>confidence <span class="sc">==</span> <span class="fl">0.99</span>], <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(breaches_rate_A, <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(breach_rate_99_A, <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">round</span>(<span class="fu">kurtosis</span>(historical_portfolio_returns_A), <span class="dv">2</span>)</span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Concentrated Tech</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(</span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(<span class="fu">avg_cor</span>(cor_matrix_B), <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(var_results_B<span class="sc">$</span>summary<span class="sc">$</span>VaR[var_results_B<span class="sc">$</span>summary<span class="sc">$</span>confidence <span class="sc">==</span> <span class="fl">0.95</span>], <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(var_results_B<span class="sc">$</span>summary<span class="sc">$</span>VaR[var_results_B<span class="sc">$</span>summary<span class="sc">$</span>confidence <span class="sc">==</span> <span class="fl">0.99</span>], <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(var_results_B<span class="sc">$</span>summary<span class="sc">$</span>CVaR[var_results_B<span class="sc">$</span>summary<span class="sc">$</span>confidence <span class="sc">==</span> <span class="fl">0.95</span>], <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(var_results_B<span class="sc">$</span>summary<span class="sc">$</span>CVaR[var_results_B<span class="sc">$</span>summary<span class="sc">$</span>confidence <span class="sc">==</span> <span class="fl">0.99</span>], <span class="at">accuracy =</span> <span class="fl">0.1</span>),</span>
-<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(breaches_rate_B, <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
-<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(breach_rate_99_B, <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
-<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">round</span>(<span class="fu">kurtosis</span>(historical_portfolio_returns_B), <span class="dv">2</span>)</span>
-<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
-<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>summary_table <span class="sc">|&gt;</span></span>
-<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">align =</span> <span class="fu">c</span>(<span class="st">"l"</span>, <span class="st">"r"</span>, <span class="st">"r"</span>), </span>
-<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>               <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Metric"</span>, <span class="st">"Diversified"</span>, <span class="st">"Concentrated Tech"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>),</span>
-<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>                <span class="at">full_width =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">row_spec</span>(<span class="dv">0</span>, <span class="at">bold =</span> <span class="cn">TRUE</span>, <span class="at">background =</span> <span class="st">"#2c3e50"</span>, <span class="at">color =</span> <span class="st">"white"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>summary_table <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Metric =</span> <span class="fu">c</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Average pairwise correlation"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"VaR 95% (10-day)"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"VaR 99% (10-day)"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"CVaR 95% (10-day)"</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"CVaR 99% (10-day)"</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Backtest breach rate (95%, expected 5%)"</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Backtest breach rate (99%, expected 1%)"</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Excess kurtosis"</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>   <span class="at">Diversified =</span> <span class="fu">c</span>(</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(<span class="fu">avg_cor</span>(cor_matrix_A), <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(var_results_A<span class="sc">$</span>summary<span class="sc">$</span>VaR[var_results_A<span class="sc">$</span>summary<span class="sc">$</span>confidence <span class="sc">==</span> <span class="fl">0.95</span>], <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(var_results_A<span class="sc">$</span>summary<span class="sc">$</span>VaR[var_results_A<span class="sc">$</span>summary<span class="sc">$</span>confidence <span class="sc">==</span> <span class="fl">0.99</span>], <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(var_results_A<span class="sc">$</span>summary<span class="sc">$</span>CVaR[var_results_A<span class="sc">$</span>summary<span class="sc">$</span>confidence <span class="sc">==</span> <span class="fl">0.95</span>], <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(var_results_A<span class="sc">$</span>summary<span class="sc">$</span>CVaR[var_results_A<span class="sc">$</span>summary<span class="sc">$</span>confidence <span class="sc">==</span> <span class="fl">0.99</span>], <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(breaches_rate_A, <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(breach_rate_99_A, <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">round</span>(<span class="fu">kurtosis</span>(historical_portfolio_returns_A), <span class="dv">2</span>)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Concentrated Tech</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(<span class="fu">avg_cor</span>(cor_matrix_B), <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(var_results_B<span class="sc">$</span>summary<span class="sc">$</span>VaR[var_results_B<span class="sc">$</span>summary<span class="sc">$</span>confidence <span class="sc">==</span> <span class="fl">0.95</span>], <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(var_results_B<span class="sc">$</span>summary<span class="sc">$</span>VaR[var_results_B<span class="sc">$</span>summary<span class="sc">$</span>confidence <span class="sc">==</span> <span class="fl">0.99</span>], <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(var_results_B<span class="sc">$</span>summary<span class="sc">$</span>CVaR[var_results_B<span class="sc">$</span>summary<span class="sc">$</span>confidence <span class="sc">==</span> <span class="fl">0.95</span>], <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(var_results_B<span class="sc">$</span>summary<span class="sc">$</span>CVaR[var_results_B<span class="sc">$</span>summary<span class="sc">$</span>confidence <span class="sc">==</span> <span class="fl">0.99</span>], <span class="at">accuracy =</span> <span class="fl">0.1</span>),</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(breaches_rate_B, <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">percent</span>(breach_rate_99_B, <span class="at">accuracy =</span> <span class="fl">0.01</span>),</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">round</span>(<span class="fu">kurtosis</span>(historical_portfolio_returns_B), <span class="dv">2</span>)</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>summary_table <span class="sc">|&gt;</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">align =</span> <span class="fu">c</span>(<span class="st">"l"</span>, <span class="st">"r"</span>, <span class="st">"r"</span>), </span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>               <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Metric"</span>, <span class="st">"Diversified"</span>, <span class="st">"Concentrated Tech"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>),</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>                <span class="at">latex_options =</span> <span class="fu">c</span>(<span class="st">"hold_position"</span>, <span class="st">"striped"</span>),</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>                <span class="at">full_width =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">row_spec</span>(<span class="dv">0</span>, <span class="at">bold =</span> <span class="cn">TRUE</span>, <span class="at">background =</span> <span class="st">"#2c3e50"</span>, <span class="at">color =</span> <span class="st">"white"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div id="tbl-summary" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<div id="tbl-summary" class="cell quarto-float quarto-figure quarto-figure-center anchored" data-tbl-pos="H">
 <figure class="quarto-float quarto-float-tbl figure">
 <div aria-describedby="tbl-summary-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -615,7 +624,7 @@ Figure&nbsp;2: Simulated 10 day return distributions — concentrated tech portf
 <tr class="even">
 <td style="text-align: left;">CVaR 95% (10-day)</td>
 <td style="text-align: right;">5.55%</td>
-<td style="text-align: right;">10.74%</td>
+<td style="text-align: right;">10.73%</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">CVaR 99% (10-day)</td>
@@ -648,6 +657,13 @@ Table&nbsp;1: Summary of risk metrics across both portfolios
 </div>
 </div>
 </section>
+</section>
+<section id="conclusion" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">7</span> Conclusion</h2>
+<p>This report set out to quantify a foundational principle of risk management, that diversification reduces portfolio risk, using Monte Carlo simulation to compare a sector diversified equity portfolio against a portfolio concentrated in a single sector. The results provide clear, consistent evidence for this principle.</p>
+<p>The concentrated technology portfolio’s holdings exhibited nearly double the average pairwise correlation of the diversified portfolio’s holdings (0.45 vs.&nbsp;0.25), and this difference translated directly into portfolio level risk: the concentrated portfolio’s simulated 10 day VaR and CVaR were consistently 1.9 to 2 times those of the diversified portfolio, across both the 95% and 99% confidence levels. The magnitude of this gap was substantial enough that even the diversified portfolio’s 99% CVaR (its average loss in the worst 1% of modeled outcomes) remained below the concentrated portfolio’s 95% VaR, a routine risk threshold by comparison.</p>
+<p>Model validation added two important qualifications to these findings. Historical backtesting confirmed both portfolios’ VaR models were reasonably well calibrated overall, though both exhibited breach rates at the 99% confidence level modestly exceeding theoretical expectations. This was traced to leptokurtic return behavior in both portfolios’ realized returns.</p>
+<p>These findings offer a quantified, evidence-based illustration of why diversification is a central tenet of portfolio risk management. They also demonstrate the value of validating a risk model’s assumptions against real data rather than treating its outputs as ground truth: the normal distribution assumption underlying Monte Carlo VaR is a reasonable approximation for these portfolios, but not an exact one, and understanding where and why it breaks down is as important as the headline risk estimates themselves.</p>
 </section>
 
 </main>
