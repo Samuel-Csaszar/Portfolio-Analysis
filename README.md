@@ -4,7 +4,7 @@ Monte Carlo simulation comparing the 10 day Value at Risk (VaR) and Conditional
 VaR of a sector diversified equity portfolio against a concentrated technology 
 portfolio, both equally weighted across 11 large-cap stocks (2021–2026).
 
-📄 **[Read the full report](Portfolio_Analysis.html)** · [PDF version](Portfolio_Analysis.pdf)
+📄 **[Read the full report](https://samuel-csaszar.github.io/Portfolio-Analysis/)** · [PDF version](Portfolio_Analysis.pdf)
 
 ## Key Finding
 
